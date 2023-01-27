@@ -48,3 +48,16 @@ export function useCreateTodo() {
 
   return { title, setTitle, content, setContent, handleCreateTodo };
 }
+
+export function useUpdateTodo(todo: TodoItemType) {
+  const [title, setTitle] = React.useState<string>(todo.title);
+  const [content, setContent] = React.useState<string>(todo.content);
+  console.log(todo, title, content);
+  const handleUpdateTodo = () => {
+    api.put(`/todos/${todo.id}`, { title, content }).catch((err) => {
+      console.error(err);
+    });
+  };
+
+  return { title, setTitle, content, setContent, handleUpdateTodo };
+}

@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetTodo, useCreateTodo } from "./hooks";
+import { useGetTodo, useCreateTodo, useUpdateTodo } from "./hooks";
+
 import type { TodoItemType } from "./types";
 
 export function TodoItem(props: { todo: TodoItemType }) {
@@ -21,11 +22,33 @@ export function TodoItem(props: { todo: TodoItemType }) {
 export function TodoDetail() {
   const { id } = useParams();
   const { todoDetail } = useGetTodo(id!);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  if (!todoDetail) return <div></div>;
 
   return (
-    <div className="p-4">
-      <h3 className="text-xl font-semibold mb-4">{todoDetail?.title}</h3>
-      <p className="text-sm">{todoDetail?.content}</p>
+    <div className="p-4 relative full">
+      <h3 className="text-xl font-semibold mb-4">{todoDetail.title}</h3>
+      <p className="text-sm">{todoDetail.content}</p>
+      <div className="absolute right-4 bottom-4 flex gap-4">
+        <button
+          className="text-sm hover:text-blue-500 text-slate-500"
+          onClick={openModal}
+        >
+          수정
+        </button>
+        <UpdateTodoModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          todo={todoDetail}
+        />
+        <button className="text-sm hover:text-blue-500 text-slate-500">
+          삭제
+        </button>
+      </div>
     </div>
   );
 }
@@ -108,6 +131,55 @@ export function CreateTodoModal(props: {
             />
             <button className="bg-blue-500 text-white h-8 rounded-md text-xs font-semibold">
               추가하기
+            </button>
+          </form>
+        </div>
+      )}
+    </ModalPortal>
+  );
+}
+
+export function UpdateTodoModal(props: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  todo: TodoItemType;
+}) {
+  const { title, setTitle, content, setContent, handleUpdateTodo } =
+    useUpdateTodo(props.todo);
+
+  const closeModal = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      props.setIsOpen(false);
+    }
+  };
+  return (
+    <ModalPortal>
+      {props.isOpen && (
+        <div
+          className="flex justify-center items-center fixed w-full h-screen z-10 bg-black/10"
+          onClick={closeModal}
+        >
+          <form
+            className="w-96 bg-slate-50 rounded-md p-4 flex flex-col justify-center gap-2"
+            onSubmit={() => {
+              handleUpdateTodo();
+              props.setIsOpen(false);
+            }}
+          >
+            <h3 className="text-slate-500 text-sm">제목</h3>
+            <input
+              className="w-full h-8 border-b bg-transparent px-2 text-sm"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <h3 className="text-slate-500 text-sm">내용</h3>
+            <textarea
+              className="w-full h-72 border bg-transparent p-2 text-sm rounded-md"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+            <button className="bg-blue-500 text-white h-8 rounded-md text-xs font-semibold">
+              수정하기
             </button>
           </form>
         </div>
