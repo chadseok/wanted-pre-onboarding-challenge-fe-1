@@ -1,13 +1,62 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import {
   useGetTodo,
+  useGetTodoList,
   useCreateTodo,
   useUpdateTodo,
   useDeleteTodo,
 } from "./hooks";
 import type { TodoItemType } from "./types";
-import ModalPortal from "../ModalPortal";
+import ModalPortal from "../@common/ModalPortal";
+
+export function HomeLayout(props: { children: React.ReactNode }) {
+  return (
+    <div className="h-160 w-192 bg-white rounded-lg shadow-md overflow-hidden">
+      {props.children}
+    </div>
+  );
+}
+
+export function HomeNav() {
+  return (
+    <div className="h-16 bg-slate-50 flex justify-between items-center border-b">
+      <div className="text-blue-500 font-semibold text-xl px-4 ">TODO LIST</div>
+      <LogoutBtn />
+    </div>
+  );
+}
+
+export function LogoutBtn() {
+  const handleLogout = () => {
+    localStorage.removeItem("AUTH_TOKEN");
+    location.reload();
+  };
+
+  return (
+    <button onClick={handleLogout} className="px-4 text-sm hover:text-blue-500">
+      로그아웃
+    </button>
+  );
+}
+
+export function HomeContent() {
+  const { todolist } = useGetTodoList();
+
+  return (
+    <div className="flex h-144">
+      <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r relative">
+        {todolist.map((todo: TodoItemType) => (
+          <TodoItem key={todo.id} todo={todo} />
+        ))}
+        <CreateTodoBtn />
+      </div>
+      <div className="w-1/2 bg-slate-10 h-full overflow-auto">
+        <Outlet />
+      </div>
+    </div>
+  );
+}
 
 export function TodoItem(props: { todo: TodoItemType }) {
   const navigate = useNavigate();
@@ -38,19 +87,6 @@ export function TodoDetail() {
         <DeleteTodoBtn />
       </div>
     </div>
-  );
-}
-
-export function LogoutBtn() {
-  const handleLogout = () => {
-    localStorage.removeItem("AUTH_TOKEN");
-    location.reload();
-  };
-
-  return (
-    <button onClick={handleLogout} className="px-4 text-sm hover:text-blue-500">
-      로그아웃
-    </button>
   );
 }
 
