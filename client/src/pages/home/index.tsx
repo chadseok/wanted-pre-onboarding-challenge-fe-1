@@ -1,5 +1,5 @@
 import React from "react";
-import { TodoItem, TodoDetail, LogoutBtn } from "./components";
+import { TodoItem, TodoDetail, LogoutBtn, CreateTodoBtn } from "./components";
 import { useGetTodoList } from "./hooks";
 import { TodoItemType } from "./types";
 
@@ -16,7 +16,7 @@ function Home() {
           <LogoutBtn />
         </div>
         <div className="flex h-144">
-          <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r">
+          <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r relative">
             {todolist.map((todo: TodoItemType) => (
               <TodoItem
                 key={todo.id}
@@ -25,6 +25,7 @@ function Home() {
                 setCurrentTodo={setCurrentTodo}
               />
             ))}
+            <CreateTodoBtn />
           </div>
           <div className="w-1/2 bg-slate-10 h-full overflow-auto">
             <TodoDetail todo={currentTodo} />
