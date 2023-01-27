@@ -1,9 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetTodo, useCreateTodo, useUpdateTodo } from "./hooks";
-
+import {
+  useGetTodo,
+  useCreateTodo,
+  useUpdateTodo,
+  useDeleteTodo,
+} from "./hooks";
 import type { TodoItemType } from "./types";
+import ModalPortal from "../ModalPortal";
 
 export function TodoItem(props: { todo: TodoItemType }) {
   const navigate = useNavigate();
@@ -22,32 +26,16 @@ export function TodoItem(props: { todo: TodoItemType }) {
 export function TodoDetail() {
   const { id } = useParams();
   const { todoDetail } = useGetTodo(id!);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const openModal = () => {
-    setIsOpen(true);
-  };
 
   if (!todoDetail) return <div></div>;
 
   return (
-    <div className="p-4 relative full">
+    <div className="p-4 relative h-full">
       <h3 className="text-xl font-semibold mb-4">{todoDetail.title}</h3>
       <p className="text-sm">{todoDetail.content}</p>
       <div className="absolute right-4 bottom-4 flex gap-4">
-        <button
-          className="text-sm hover:text-blue-500 text-slate-500"
-          onClick={openModal}
-        >
-          수정
-        </button>
-        <UpdateTodoModal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          todo={todoDetail}
-        />
-        <button className="text-sm hover:text-blue-500 text-slate-500">
-          삭제
-        </button>
+        <UpdateTodoBtn todoDetail={todoDetail} />
+        <DeleteTodoBtn />
       </div>
     </div>
   );
@@ -83,11 +71,6 @@ export function CreateTodoBtn() {
       <CreateTodoModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
-}
-
-export function ModalPortal(props: { children: React.ReactNode }) {
-  const modalRoot = document.querySelector("#modal-root")!;
-  return ReactDOM.createPortal(props.children, modalRoot);
 }
 
 export function CreateTodoModal(props: {
@@ -139,6 +122,29 @@ export function CreateTodoModal(props: {
   );
 }
 
+export function UpdateTodoBtn(props: { todoDetail: TodoItemType }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  return (
+    <>
+      <button
+        className="text-sm hover:text-blue-500 text-slate-500"
+        onClick={openModal}
+      >
+        수정
+      </button>
+      <UpdateTodoModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        todo={props.todoDetail}
+      />
+    </>
+  );
+}
+
 export function UpdateTodoModal(props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -185,5 +191,18 @@ export function UpdateTodoModal(props: {
         </div>
       )}
     </ModalPortal>
+  );
+}
+
+export function DeleteTodoBtn() {
+  const { id } = useParams();
+  const { handleDeleteTodo } = useDeleteTodo(id!);
+  return (
+    <button
+      className="text-sm hover:text-blue-500 text-slate-500"
+      onClick={handleDeleteTodo}
+    >
+      삭제
+    </button>
   );
 }

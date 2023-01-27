@@ -52,7 +52,7 @@ export function useCreateTodo() {
 export function useUpdateTodo(todo: TodoItemType) {
   const [title, setTitle] = React.useState<string>(todo.title);
   const [content, setContent] = React.useState<string>(todo.content);
-  console.log(todo, title, content);
+
   const handleUpdateTodo = () => {
     api.put(`/todos/${todo.id}`, { title, content }).catch((err) => {
       console.error(err);
@@ -60,4 +60,18 @@ export function useUpdateTodo(todo: TodoItemType) {
   };
 
   return { title, setTitle, content, setContent, handleUpdateTodo };
+}
+
+export function useDeleteTodo(id: string) {
+  const navigate = useNavigate();
+  const handleDeleteTodo = () => {
+    api
+      .delete(`/todos/${id}`)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  return { handleDeleteTodo };
 }
