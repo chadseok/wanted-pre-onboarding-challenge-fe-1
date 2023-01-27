@@ -1,19 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { useCreateTodo } from "./hooks";
+import { useParams, useNavigate } from "react-router-dom";
+import { useGetTodo, useCreateTodo } from "./hooks";
 import type { TodoItemType } from "./types";
 
-export function TodoItem(props: {
-  todo: TodoItemType;
-  currentTodo: TodoItemType;
-  setCurrentTodo: React.Dispatch<React.SetStateAction<TodoItemType>>;
-}) {
+export function TodoItem(props: { todo: TodoItemType }) {
+  const navigate = useNavigate();
+
   return (
     <div
-      className={`border-b border-slate-100 p-4 cursor-pointer ${
-        props.todo.id === props.currentTodo.id ? "bg-slate-100" : ""
-      } hover:bg-slate-100`}
-      onClick={() => props.setCurrentTodo(props.todo)}
+      className={`border-b border-slate-100 p-4 cursor-pointer hover:bg-slate-100`}
+      onClick={() => navigate(`/todos/${props.todo.id}`)}
     >
       <h3 className="font-semibold text-md">{props.todo.title}</h3>
       <p className="text-xs text-gray-400">{props.todo.content}</p>
@@ -21,11 +18,14 @@ export function TodoItem(props: {
   );
 }
 
-export function TodoDetail(props: { todo: TodoItemType }) {
+export function TodoDetail() {
+  const { id } = useParams();
+  const { todoDetail } = useGetTodo(id!);
+
   return (
     <div className="p-4">
-      <h3 className="text-xl font-semibold mb-4">{props.todo.title}</h3>
-      <p className="text-sm">{props.todo.content}</p>
+      <h3 className="text-xl font-semibold mb-4">{todoDetail?.title}</h3>
+      <p className="text-sm">{todoDetail?.content}</p>
     </div>
   );
 }

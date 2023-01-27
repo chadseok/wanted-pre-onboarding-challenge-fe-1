@@ -5,13 +5,6 @@ import { TodoItemType } from "./types";
 
 export function useGetTodoList() {
   const navigate = useNavigate();
-  const [currentTodo, setCurrentTodo] = React.useState<TodoItemType>({
-    title: "",
-    content: "",
-    id: "",
-    createdAt: "",
-    updatedAt: "",
-  });
   const [todolist, setTodolist] = React.useState<TodoItemType[]>([]);
 
   React.useEffect(() => {
@@ -19,12 +12,6 @@ export function useGetTodoList() {
       .get("/todos")
       .then((res) => {
         setTodolist(res.data.data as TodoItemType[]);
-        return res.data.data;
-      })
-      .then((data) => {
-        if (data[0]) {
-          setCurrentTodo(data[0]);
-        }
       })
       .catch((err) => {
         if (err.response.status === 401) {
@@ -33,7 +20,20 @@ export function useGetTodoList() {
       });
   }, []);
 
-  return { currentTodo, setCurrentTodo, todolist, setTodolist };
+  return { todolist, setTodolist };
+}
+
+export function useGetTodo(id: string) {
+  const [todoDetail, setTodoDetail] = React.useState<TodoItemType>();
+
+  React.useEffect(() => {
+    api
+      .get(`/todos/${id}`)
+      .then((res) => setTodoDetail(res.data.data as TodoItemType))
+      .catch((err) => console.error(err));
+  });
+
+  return { todoDetail, setTodoDetail };
 }
 
 export function useCreateTodo() {

@@ -1,10 +1,11 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import { TodoItem, TodoDetail, LogoutBtn, CreateTodoBtn } from "./components";
 import { useGetTodoList } from "./hooks";
 import { TodoItemType } from "./types";
 
 function Home() {
-  const { currentTodo, setCurrentTodo, todolist } = useGetTodoList();
+  const { todolist } = useGetTodoList();
 
   return (
     <div className="h-screen flex justify-center items-center bg-blue-50">
@@ -18,17 +19,12 @@ function Home() {
         <div className="flex h-144">
           <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r relative">
             {todolist.map((todo: TodoItemType) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                currentTodo={currentTodo}
-                setCurrentTodo={setCurrentTodo}
-              />
+              <TodoItem key={todo.id} todo={todo} />
             ))}
             <CreateTodoBtn />
           </div>
           <div className="w-1/2 bg-slate-10 h-full overflow-auto">
-            <TodoDetail todo={currentTodo} />
+            <Outlet />
           </div>
         </div>
       </div>
