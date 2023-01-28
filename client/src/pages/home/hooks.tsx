@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../@common/api";
-import { TodoItemType } from "./types";
+import fetchInstance from "../@common/fetchInstance";
+import type { TodoItemType } from "./types";
 
 export function useGetTodoList() {
   const navigate = useNavigate();
   const [todolist, setTodolist] = React.useState<TodoItemType[]>([]);
 
   React.useEffect(() => {
-    api
+    fetchInstance
       .get("/todos")
       .then((res) => {
         setTodolist(res.data.data as TodoItemType[]);
@@ -27,7 +27,7 @@ export function useGetTodo(id: string) {
   const [todoDetail, setTodoDetail] = React.useState<TodoItemType>();
 
   React.useEffect(() => {
-    api
+    fetchInstance
       .get(`/todos/${id}`)
       .then((res) => setTodoDetail(res.data.data as TodoItemType))
       .catch((err) => console.error(err));
@@ -41,7 +41,7 @@ export function useCreateTodo() {
   const [content, setContent] = React.useState<string>("");
 
   const handleCreateTodo = () => {
-    api.post("/todos", { title, content }).catch((err) => {
+    fetchInstance.post("/todos", { title, content }).catch((err) => {
       console.error(err);
     });
   };
@@ -54,7 +54,7 @@ export function useUpdateTodo(todo: TodoItemType) {
   const [content, setContent] = React.useState<string>(todo.content);
 
   const handleUpdateTodo = () => {
-    api.put(`/todos/${todo.id}`, { title, content }).catch((err) => {
+    fetchInstance.put(`/todos/${todo.id}`, { title, content }).catch((err) => {
       console.error(err);
     });
   };
@@ -65,7 +65,7 @@ export function useUpdateTodo(todo: TodoItemType) {
 export function useDeleteTodo(id: string) {
   const navigate = useNavigate();
   const handleDeleteTodo = () => {
-    api
+    fetchInstance
       .delete(`/todos/${id}`)
       .then(() => {
         navigate("/");

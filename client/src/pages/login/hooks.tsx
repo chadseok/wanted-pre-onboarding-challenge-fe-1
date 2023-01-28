@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../@common/api";
+import fetchInstance from "../@common/fetchInstance";
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -10,11 +10,10 @@ export function useLogin() {
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    api
+    fetchInstance
       .post("/users/login", { email, password })
       .then((res) => {
         localStorage.setItem("AUTH_TOKEN", res.data.token);
-        api.defaults.headers.Authorization = res.data.token;
         navigate("/");
       })
       .catch((err) => console.error(err));

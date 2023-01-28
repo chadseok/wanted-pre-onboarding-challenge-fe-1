@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../@common/api";
+import fetchInstance from "../@common/fetchInstance";
 
 export function useSignUp() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export function useSignUp() {
   const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    api
+    fetchInstance
       .post("/users/create", { email, password })
       .then(() => {
         navigate("/login");
