@@ -10,15 +10,15 @@ export function SignUpLayout(props: { children: React.ReactNode }) {
 }
 
 export function SignUpForm() {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    passwordcheck,
-    setPasswordcheck,
-    handleSignUp,
-  } = useSignUp();
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const [passwordcheck, setPasswordcheck] = React.useState<string>("");
+  const { mutate } = useSignUp();
+
+  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutate({ email, password });
+  };
 
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSignUp}>

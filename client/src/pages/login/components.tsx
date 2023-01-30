@@ -11,7 +11,14 @@ export function LoginLayout(props: { children: React.ReactNode }) {
 }
 
 export function LoginContent() {
-  const { email, setEmail, password, setPassword, handleLogin } = useLogin();
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const { mutate } = useLogin();
+
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutate({ email, password });
+  };
 
   return (
     <>
@@ -33,7 +40,10 @@ export function LoginContent() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="h-4"></div>
-        <button className="w-full rounded-sm h-12 font-semibold bg-blue-500 rounded-3xl text-white">
+        <button
+          className="w-full rounded-sm h-12 font-semibold bg-blue-500 rounded-3xl text-white"
+          type="submit"
+        >
           이메일로 계속하기
         </button>
       </form>

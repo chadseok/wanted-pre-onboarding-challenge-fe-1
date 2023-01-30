@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import {
-  useGetTodo,
+  useGetTodoDetail,
   useGetTodoList,
   useCreateTodo,
   useUpdateTodo,
@@ -41,12 +41,15 @@ export function LogoutBtn() {
 }
 
 export function HomeContent() {
-  const { todolist } = useGetTodoList();
+  const { data, isLoading } = useGetTodoList();
+
+  if (!data || isLoading) return null;
+  const todoList = data.data.data;
 
   return (
     <div className="flex h-144">
       <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r relative">
-        {todolist.map((todo: TodoItemType) => (
+        {todoList.map((todo: TodoItemType) => (
           <TodoItem key={todo.id} todo={todo} />
         ))}
         <CreateTodoBtn />
@@ -74,9 +77,11 @@ export function TodoItem(props: { todo: TodoItemType }) {
 
 export function TodoDetail() {
   const { id } = useParams();
-  const { todoDetail } = useGetTodo(id!);
+  const { data, isLoading } = useGetTodoDetail(id!);
 
-  if (!todoDetail) return <div></div>;
+  if (!data || isLoading) return null;
+
+  const todoDetail = data.data.data;
 
   return (
     <div className="p-4 relative h-full">
@@ -101,6 +106,7 @@ export function CreateTodoBtn() {
       <button
         className="bg-blue-500 text-white rounded-full text-4xl h-12 w-12 absolute right-2 bottom-2 active:bg-blue-200"
         onClick={openModal}
+        type="submit"
       >
         +
       </button>
@@ -113,13 +119,19 @@ export function CreateTodoModal(props: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { title, setTitle, content, setContent, handleCreateTodo } =
-    useCreateTodo();
+  const [title, setTitle] = React.useState<string>("");
+  const [content, setContent] = React.useState<string>("");
+  const { mutate } = useCreateTodo();
 
   const closeModal = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       props.setIsOpen(false);
     }
+  };
+
+  const handleCreateTodo = () => {
+    mutate({ title, content });
+    props.setIsOpen(false);
   };
 
   return (
@@ -131,10 +143,7 @@ export function CreateTodoModal(props: {
         >
           <form
             className="w-96 bg-slate-50 rounded-md p-4 flex flex-col justify-center gap-2"
-            onSubmit={() => {
-              handleCreateTodo();
-              props.setIsOpen(false);
-            }}
+            onSubmit={handleCreateTodo}
           >
             <h3 className="text-slate-500 text-sm">제목</h3>
             <input
@@ -169,6 +178,7 @@ export function UpdateTodoBtn(props: { todoDetail: TodoItemType }) {
       <button
         className="text-sm hover:text-blue-500 text-slate-500"
         onClick={openModal}
+        type="submit"
       >
         수정
       </button>
@@ -186,14 +196,25 @@ export function UpdateTodoModal(props: {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   todo: TodoItemType;
 }) {
-  const { title, setTitle, content, setContent, handleUpdateTodo } =
-    useUpdateTodo(props.todo);
+  const [title, setTitle] = React.useState<string>(props.todo.title);
+  const [content, setContent] = React.useState<string>(props.todo.content);
+  const { mutate } = useUpdateTodo(props.todo.id);
 
   const closeModal = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       props.setIsOpen(false);
     }
   };
+
+  const handleUpdateTodo = () => {
+    mutate({
+      title,
+      content,
+      id: props.todo.id,
+    });
+    props.setIsOpen(false);
+  };
+
   return (
     <ModalPortal>
       {props.isOpen && (
@@ -203,10 +224,7 @@ export function UpdateTodoModal(props: {
         >
           <form
             className="w-96 bg-slate-50 rounded-md p-4 flex flex-col justify-center gap-2"
-            onSubmit={() => {
-              handleUpdateTodo();
-              props.setIsOpen(false);
-            }}
+            onSubmit={handleUpdateTodo}
           >
             <h3 className="text-slate-500 text-sm">제목</h3>
             <input
@@ -232,7 +250,12 @@ export function UpdateTodoModal(props: {
 
 export function DeleteTodoBtn() {
   const { id } = useParams();
-  const { handleDeleteTodo } = useDeleteTodo(id!);
+  const { mutate } = useDeleteTodo(id!);
+
+  const handleDeleteTodo = () => {
+    mutate();
+  };
+
   return (
     <button
       className="text-sm hover:text-blue-500 text-slate-500"

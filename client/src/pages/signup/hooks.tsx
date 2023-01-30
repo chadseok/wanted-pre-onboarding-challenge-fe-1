@@ -1,31 +1,17 @@
 import React from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import fetchInstance from "../@common/fetchInstance";
 
+const signUpApi = (value: { email: string; password: string }) =>
+  fetchInstance.post("/users/create", value);
+
 export function useSignUp() {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
-  const [passwordcheck, setPasswordcheck] = React.useState<string>("");
-
-  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    fetchInstance
-      .post("/users/create", { email, password })
-      .then(() => {
-        navigate("/login");
-      })
-      .catch((err) => console.error(err));
-  };
-
-  return {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    passwordcheck,
-    setPasswordcheck,
-    handleSignUp,
-  };
+  return useMutation({
+    mutationFn: signUpApi,
+    onSuccess: () => {
+      navigate("/login");
+    },
+  });
 }
