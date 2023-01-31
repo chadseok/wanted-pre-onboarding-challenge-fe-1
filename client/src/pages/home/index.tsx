@@ -1,5 +1,5 @@
 import React from "react";
-import GlobalLayout from "../../common/components/GlobalLayout";
+import GlobalLayout from "@/common/components/GlobalLayout";
 import { HomeLayout, HomeNav, HomeContent } from "./components";
 
 function Home() {

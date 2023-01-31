@@ -8,7 +8,7 @@ import {
   useDeleteTodo,
 } from "./hooks";
 import type { TodoItemType } from "./types";
-import ModalPortal from "../../common/components/ModalPortal";
+import ModalPortal from "@/common/components/ModalPortal";
 
 export function HomeLayout(props: { children: React.ReactNode }) {
   return (

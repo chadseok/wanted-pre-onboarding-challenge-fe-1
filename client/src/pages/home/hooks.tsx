@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import fetchInstance from "../../common/utils/fetchInstance";
+import fetchInstance from "@/common/utils/fetchInstance";
 import { AxiosError } from "axios";
 
 const getTodoListApi = () => fetchInstance.get("/todos");

@@ -1,4 +1,4 @@
-import GlobalLayout from "../../common/components/GlobalLayout";
+import GlobalLayout from "@/common/components/GlobalLayout";
 import {
   SignUpLayout,
   SignUpForm,
