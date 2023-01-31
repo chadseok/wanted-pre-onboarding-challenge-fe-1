@@ -1,12 +1,18 @@
-import React from "react";
 import GlobalLayout from "../@common/GlobalLayout";
-import { SignUpLayout, SignUpForm } from "./components";
+import {
+  SignUpLayout,
+  SignUpForm,
+  SignUpHeadline,
+  LoginLink,
+} from "./components";
 
 function SignUp() {
   return (
     <GlobalLayout>
       <SignUpLayout>
+        <SignUpHeadline />
         <SignUpForm />
+        <LoginLink />
       </SignUpLayout>
     </GlobalLayout>
   );
