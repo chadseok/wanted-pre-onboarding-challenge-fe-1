@@ -9,6 +9,7 @@ import {
 } from "./hooks";
 import type { TodoItemType } from "./types";
 import ModalPortal from "@/common/components/ModalPortal";
+import STORAGE from "@/common/constants/storage";
 
 export function HomeLayout(props: { children: React.ReactNode }) {
   return (
@@ -33,7 +34,7 @@ export function HomeNav() {
 export function LogoutBtn() {
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("AUTH_TOKEN");
+    localStorage.removeItem(STORAGE.authToken);
     navigate("/login");
   };
 
