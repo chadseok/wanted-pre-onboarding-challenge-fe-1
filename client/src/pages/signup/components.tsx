@@ -175,7 +175,7 @@ export function LoginLink() {
   return (
     <div className="text-center">
       <span className="text-sm">이미 계정이 있나요? </span>
-      <Link to="/signup" className="text-blue-700 text-sm mt-2 underline">
+      <Link to="/login" className="text-blue-700 text-sm mt-2 underline">
         로그인
       </Link>
     </div>

@@ -11,6 +11,7 @@ export function useGetTodoList() {
   return useQuery({
     queryKey: ["TODO_LIST"],
     queryFn: getTodoListApi,
+    retry: false,
     onError: (error: AxiosError) => {
       if (error.response?.status === 401) navigate("/login");
     },

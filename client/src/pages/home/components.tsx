@@ -20,21 +20,28 @@ export function HomeLayout(props: { children: React.ReactNode }) {
 
 export function HomeNav() {
   return (
-    <div className="h-16 bg-slate-50 flex justify-between items-center border-b">
-      <div className="text-blue-500 font-semibold text-xl px-4 ">TODO LIST</div>
-      <LogoutBtn />
-    </div>
+    <nav className="h-16 bg-slate-50 flex justify-between items-center border-b">
+      <h1 className="text-blue-500 font-semibold text-xl px-4 ">TODO LIST</h1>
+      <div>
+        <CreateTodoBtn />
+        <LogoutBtn />
+      </div>
+    </nav>
   );
 }
 
 export function LogoutBtn() {
+  const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("AUTH_TOKEN");
-    location.reload();
+    navigate("/login");
   };
 
   return (
-    <button onClick={handleLogout} className="px-4 text-sm hover:text-blue-500">
+    <button
+      onClick={handleLogout}
+      className="px-4 text-sm text-slate-500 hover:text-blue-500"
+    >
       로그아웃
     </button>
   );
@@ -48,11 +55,10 @@ export function HomeContent() {
 
   return (
     <div className="flex h-144">
-      <div className="w-1/2 bg-slate-10 h-full overflow-auto border-r relative">
+      <div className="w-1/2 bg-slate-10 h-full border-r overflow-auto">
         {todoList.map((todo: TodoItemType) => (
           <TodoItem key={todo.id} todo={todo} />
         ))}
-        <CreateTodoBtn />
       </div>
       <div className="w-1/2 bg-slate-10 h-full overflow-auto">
         <Outlet />
@@ -100,11 +106,11 @@ export function CreateTodoBtn() {
   const openModal = () => {
     setIsOpen(true);
   };
-  //TODO '+' 가운데 오도록 해보기
+
   return (
     <>
       <button
-        className="bg-blue-500 text-white rounded-full text-4xl h-12 w-12 absolute right-2 bottom-2 active:bg-blue-200"
+        className="text-lg text-blue-500 border border-transparent px-2 bg-white rounded-md font-semibold shadow-md hover:border-blue-500"
         onClick={openModal}
         type="submit"
       >
