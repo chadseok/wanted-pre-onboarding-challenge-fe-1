@@ -68,11 +68,14 @@ export function HomeContent() {
 }
 
 export function TodoItem(props: { todo: TodoItemType }) {
+  const { id } = useParams();
   const navigate = useNavigate();
 
   return (
     <div
-      className={`border-b border-slate-100 p-4 cursor-pointer hover:bg-slate-100`}
+      className={`border-b border-slate-100 p-4 cursor-pointer hover:bg-slate-100 ${
+        id === props.todo.id ? "bg-slate-100" : ""
+      }`}
       onClick={() => navigate(`/todos/${props.todo.id}`)}
     >
       <h3 className="font-semibold text-md">{props.todo.title}</h3>
