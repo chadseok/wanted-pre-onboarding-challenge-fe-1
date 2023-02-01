@@ -2,6 +2,7 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import fetchInstance from "@/common/utils/fetchInstance";
+import STORAGE from "@/common/constants/storage";
 
 const loginApi = (value: { email: string; password: string }) =>
   fetchInstance.post("/users/login", value);
@@ -12,7 +13,7 @@ export function useLogin() {
   return useMutation({
     mutationFn: loginApi,
     onSuccess: (res) => {
-      localStorage.setItem("AUTH_TOKEN", res.data.token);
+      localStorage.setItem(STORAGE.authToken, res.data.token);
       navigate("/");
     },
   });

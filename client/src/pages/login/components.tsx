@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "./hooks";
+import ERROR_MSG from "@/common/constants/errorMsg";
 
 export function LoginLayout(props: { children: React.ReactNode }) {
   return (
@@ -26,9 +27,7 @@ export function LoginForm() {
       { email, password },
       {
         onError: () => {
-          setLoginAlertMsg(
-            "등록되지 않은 아이디거나, 아이디 또는 비밀번호가 회원정보와 일치하지 않습니다."
-          );
+          setLoginAlertMsg(ERROR_MSG.notMemberloginFailure);
         },
       }
     );
@@ -45,7 +44,7 @@ export function LoginForm() {
     ).test(email);
 
     if (result || email === "") setEmailAlertMsg(null);
-    else setEmailAlertMsg("올바른 이메일 형식 아닙니다");
+    else setEmailAlertMsg(ERROR_MSG.notValidEmail);
   };
 
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSignUp } from "./hooks";
+import ERROR_MSG from "@/common/constants/errorMsg";
 
 export function SignUpLayout(props: { children: React.ReactNode }) {
   return (
@@ -33,7 +34,7 @@ export function SignUpForm() {
       { email, password },
       {
         onError: () => {
-          setEmailAlertMsg("이미 존재하는 이메일입니다");
+          setEmailAlertMsg(ERROR_MSG.duplicatedEmail);
         },
       }
     );
@@ -58,18 +59,18 @@ export function SignUpForm() {
     ).test(email);
 
     if (result || email === "") setEmailAlertMsg(null);
-    else setEmailAlertMsg("올바른 이메일 형식 아닙니다");
+    else setEmailAlertMsg(ERROR_MSG.notValidEmail);
   };
 
   const handlePasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setPassword(newValue);
 
-    if (newValue.length < 8) setPasswordAlertMsg("8자 이상 입력해주십시오");
+    if (newValue.length < 8) setPasswordAlertMsg(ERROR_MSG.notValidPassword);
     else setPasswordAlertMsg(null);
 
     if (passwordCheck !== "" && passwordCheck !== newValue)
-      setPasswordCheckAlertMsg("입력한 비밀번호가 같지 않습니다");
+      setPasswordCheckAlertMsg(ERROR_MSG.notSamePassword);
     else setPasswordCheckAlertMsg(null);
   };
 
@@ -80,7 +81,7 @@ export function SignUpForm() {
     setPasswordCheck(newValue);
 
     if (password !== newValue)
-      setPasswordCheckAlertMsg("입력한 비밀번호가 같지 않습니다");
+      setPasswordCheckAlertMsg(ERROR_MSG.notSamePassword);
     else setPasswordCheckAlertMsg(null);
   };
 
